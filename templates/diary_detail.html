@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ diary.title }} - 일기</title>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f1e6dd;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+
+        .meta {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .content {
+            font-size: 16px;
+            white-space: pre-line;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .tag-container {
+            background-color: #f8f5f1;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: #a88f7f;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin: 5px 5px 0 0;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .button-container .dashboard-btn {
+            background-color: #a88f7f;
+            color: white;
+            padding: 0 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            height: 40px;
+            line-height: 40px;
+            min-width: 140px;
+            text-align: center;
+            display: inline-block;
+            box-sizing: border-box;
+        }
+
+        .button-container .small-btn {
+            background-color: #a88f7f;
+            color: white;
+            padding: 0 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            height: 40px;
+            line-height: 40px;
+            min-width: 90px;
+            text-align: center;
+            display: inline-block;
+            box-sizing: border-box;
+        }
+
+        .button-container a:hover,
+        .button-container button:hover {
+            background-color: #947d6d;
+        }
+
+        .button-container form {
+            display: contents;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>{{ diary.title }}</h2>
+
+        <p class="meta">📅 {{ diary.created_at.strftime('%Y년 %m월 %d일') }}</p>
+
+        {% set weather_icons = {
+            'sunny': '☀',
+            'cloudy': '☁',
+            'rainy': '🌧',
+            'snowy': '❄'
+        } %}
+
+        <p class="meta">🌈 날씨: {{ weather_icons.get(diary.weather, '🌤') }} ({{ diary.weather }})</p>
+
+        <hr>
+
+        <div class="content">
+            {{ diary.content }}
+        </div>
+
+        <h3>✨ 추출된 장점:</h3>
+        <div class="tag-container">
+            {% for adv in advantages %}
+                <span class="tag">{{ adv.keyword }}</span>
+            {% endfor %}
+        </div>
+
+        <div class="button-container">
+            <a href="/dashboard" class="dashboard-btn">← 대시보드로 돌아가기</a>
+            <a href="/edit_diary/{{ diary.id }}" class="small-btn">✏ 수정</a>
+            <form action="/delete_diary/{{ diary.id }}" method="POST" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+                <button type="submit" class="small-btn">🗑 삭제</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>장점 분석 모델 관리</title>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f5ede6;
+            padding: 40px;
+            color: #3e322b;
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 40px;
+            left: 310px;
+            background-color: #fffaf5s;
+            color: #3e322b;
+            border: none;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 30px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: #fffaf5;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .model-list {
+            margin-bottom: 40px;
+        }
+
+        .model-item {
+            background-color: #f8f5f1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 18px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        .model-item span {
+            font-size: 15px;
+        }
+
+        .model-item form button {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .model-item form button:hover {
+            background-color: #c9302c;
+        }
+
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input[type="file"] {
+            padding: 6px;
+            border-radius: 6px;
+            background-color: #f4f4f4;
+            border: 1px solid #ccc;
+        }
+
+        button.upload-btn {
+            padding: 10px;
+            background-color: #a88f7f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button.upload-btn:hover {
+            background-color: #947d6d;
+        }
+
+        .message {
+            color: green;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background-color: #e0d9d2;
+            margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
+
+<a href="/admin_dashboard" class="back-button">&lt;</a>
+
+<div class="container">
+    <h1>장점 분석 모델 관리</h1>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="message">{{ messages[0] }}</div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="model-list">
+        {% if models %}
+            {% for model in models %}
+                <div class="model-item">
+                    <span>{{ model }}</span>
+                    <form method="POST" action="/admin/models/delete/{{ model }}">
+                        <button type="submit">삭제</button>
+                    </form>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p style="text-align:center; color:#888;">등록된 모델이 없습니다.</p>
+        {% endif %}
+    </div>
+
+    <hr>
+
+    <form method="POST" action="/admin/models/upload" enctype="multipart/form-data" class="upload-form">
+        <label for="model_file"><strong>새 모델 업로드</strong></label>
+        <input type="file" name="model_file" id="model_file" required>
+        <button type="submit" class="upload-btn">업로드</button>
+    </form>
+</div>
+</body>
+</html>

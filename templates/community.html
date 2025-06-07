@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>커뮤니티</title>
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #f4ebe3;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    .menu-button {
+      position: relative;
+      top: 50px;
+      left: 340px;
+      font-size: 24px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      z-index: 1000;
+      color: #333;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+      margin: 40px 0 20px;
+    }
+
+    .post {
+      background-color: #f8f5f1;
+      padding: 16px;
+      margin: 20px auto;
+      border-radius: 12px;
+      box-shadow: 0 0 4px rgba(0,0,0,0.05);
+      max-width: 650px;
+    }
+
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .post h3 {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .report-button {
+      background: none;
+      border: none;
+      color: #c0392b;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .post .meta {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .post .content {
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 10px;
+      color: #3e322b;
+    }
+
+    .comment-link {
+      font-size: 13px;
+      color: #888;
+      border-top: 1px solid #ddd;
+      padding-top: 8px;
+      margin-top: 10px;
+    }
+
+    .comment-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .comment {
+      font-size: 13px;
+      color: #444;
+      flex: 1;
+    }
+
+    .comment-form {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .comment-form input[type="text"] {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .comment-form button[type="submit"] {
+      padding: 8px 12px;
+      margin-left: 8px;
+      background-color: #a88f7f;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .comment-form button[type="submit"]:hover {
+      background-color: #947d6d;
+    }
+
+    .like-form {
+      margin-top: 10px;
+    }
+
+    .like-form button {
+      background-color: #f3e0ce;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .like-form button:hover {
+      background-color: #e6cdb5;
+    }
+
+    .write-button {
+      display: block;
+      width: 100%;
+      max-width: 240px;
+      margin: 20px auto;
+      padding: 12px;
+      text-align: center;
+      background-color: #a88f7f;
+      color: white;
+      font-weight: bold;
+      border-radius: 8px;
+      text-decoration: none;
+    }
+
+    .write-button:hover {
+      background-color: #947d6d;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="menu-button" onclick="window.location.href='/dashboard'">☰</button>
+
+  <div class="title">community</div>
+
+  {% for post in posts %}
+    <div class="post">
+      <div class="post-header">
+        <h3>제목: {{ post.title }}</h3>
+        <form method="POST" action="/report_post/{{ post.id }}">
+          <button type="submit" class="report-button">🚨 신고</button>
+        </form>
+      </div>
+      <p class="meta">👤 작성자: <strong>{{ post.author.nickname }}</strong></p>
+      <div class="content">{{ post.content }}</div>
+
+      <form class="like-form" method="POST" action="/like/{{ post.id }}">
+        <button type="submit">
+          🤍 {% if post.like_count %}{{ post.like_count }} 공감{% else %}공감{% endif %}
+        </button>
+      </form>
+
+      <div class="comment-link">💬 댓글</div>
+      {% for comment in post.comments %}
+        <div class="comment-row">
+          <div class="comment">- {{ comment.user.nickname }}: {{ comment.content }}</div>
+          <form method="POST" action="/report_comment/{{ comment.id }}">
+            <button type="submit" class="report-button">🚨</button>
+          </form>
+        </div>
+      {% endfor %}
+
+      <form class="comment-form" action="/comment/{{ post.id }}" method="POST">
+        <input type="text" name="comment" placeholder="댓글을 입력하세요">
+        <button type="submit">게시</button>
+      </form>
+    </div>
+  {% endfor %}
+
+  <a href="/community/write" class="write-button">+ 글쓰기</a>
+
+</body>
+</html>

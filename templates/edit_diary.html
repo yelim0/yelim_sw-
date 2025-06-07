@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>일기 수정</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body {
+            background-color: #f4ebe3;
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .header {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #4a3e36;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #4a3e36;
+        }
+
+        input[type="text"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 15px;
+            background-color: #fff9f3;
+            box-shadow: inset 1px 1px 3px rgba(0,0,0,0.05);
+        }
+
+        textarea {
+            height: 180px;
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #a58d7f;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #8c776b;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #6e6157;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">✏️ 일기 수정</div>
+        <form method="POST">
+            <label for="title">제목</label>
+            <input type="text" name="title" id="title" value="{{ diary.title }}" required>
+
+            <label for="weather">날씨</label>
+            <select name="weather" id="weather" required>
+                <option value="sunny" {% if diary.weather == 'sunny' %}selected{% endif %}>☀️ 맑음</option>
+                <option value="cloudy" {% if diary.weather == 'cloudy' %}selected{% endif %}>☁️ 흐림</option>
+                <option value="rainy" {% if diary.weather == 'rainy' %}selected{% endif %}>🌧 비</option>
+                <option value="snowy" {% if diary.weather == 'snowy' %}selected{% endif %}>❄️ 눈</option>
+            </select>
+
+            <label for="content">내용</label>
+            <textarea name="content" id="content" required>{{ diary.content }}</textarea>
+
+            <button type="submit">수정 완료</button>
+        </form>
+        <a class="back-link" href="/diary/{{ diary.id }}">← 돌아가기</a>
+    </div>
+</body>
+</html>

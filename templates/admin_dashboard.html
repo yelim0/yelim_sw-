@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>관리자 대시보드</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background-color: #f4ebe3;
+      font-family: 'Noto Sans KR', sans-serif;
+      margin: 0;
+      padding: 0;
+      position: relative;
+    }
+
+    .back-button {
+      position: absolute;
+      top: 35px;
+      left: 485px;
+      background-color: #f4ebe3;
+      color: #3e322b;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 24px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: #4a3e36;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background-color: #f8f5f1;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-title {
+      font-size: 16px;
+      color: #4a3e36;
+      font-weight: 600;
+    }
+
+    .card-button {
+      background-color: #a58d7f;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .card-button:hover {
+      background-color: #8c776b;
+    }
+  </style>
+</head>
+<body>
+
+  <a href="/" class="back-button">&lt;</a>
+
+  <div class="container">
+    <div class="title">관리자 대시보드</div>
+
+    <div class="card">
+      <div class="card-title">사용자 관리</div>
+      <button class="card-button" onclick="location.href='/admin/users'">관리</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">장점 분석 모델 관리</div>
+      <button class="card-button" onclick="location.href='/admin/models'">관리</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">커뮤니티 관리</div>
+      <button class="card-button" onclick="location.href='/admin/community'">관리</button>
+    </div>
+  </div>
+</body>
+</html>

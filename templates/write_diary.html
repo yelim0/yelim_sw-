@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>일기 작성</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: #f4ebe3;
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .header {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #4a3e36;
+        }
+
+        .date-indicator {
+            text-align: center;
+            font-size: 14px;
+            color: #6e6157;
+            margin-bottom: 20px;
+        }
+
+        .flash-message {
+            background-color: #ffe5e5;
+            color: #a94442;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #4a3e36;
+        }
+
+        input[type="text"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 15px;
+            background-color: #fff9f3;
+            box-shadow: inset 1px 1px 3px rgba(0,0,0,0.05);
+        }
+
+        textarea {
+            height: 180px;
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #a58d7f;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #8c776b;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #6e6157;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">일기 작성</div>
+
+        {% if selected_date %}
+        <div class="date-indicator">
+            📅 {{ selected_date }}에 대한 일기를 작성 중입니다.
+        </div>
+        {% endif %}
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="flash-message">
+              {% for message in messages %}
+                {{ message }}
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <label for="title">제목</label>
+            <input type="text" name="title" id="title" placeholder="오늘의 제목을 입력하세요" required>
+
+            <label for="weather">날씨</label>
+            <select name="weather" id="weather" required>
+                <option value="sunny">☀️ 맑음</option>
+                <option value="cloudy">☁️ 흐림</option>
+                <option value="rainy">🌧 비</option>
+                <option value="snowy">❄️ 눈</option>
+            </select>
+
+            <label for="content">내용</label>
+            <textarea name="content" id="content" placeholder="오늘의 이야기를 들려주세요" required></textarea>
+
+            <button type="submit">저장하기</button>
+        </form>
+
+        <a class="back-link" href="/dashboard">← 돌아가기</a>
+    </div>
+</body>
+</html>

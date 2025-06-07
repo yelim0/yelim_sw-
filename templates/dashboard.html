@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Strength Diary - Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #f1e6dd;
+      color: #333;
+      display: flex;
+      justify-content: center;
+    }
+
+    .dashboard-container {
+      width: 100%;
+      max-width: 960px;
+      margin: 20px;
+      background-color: #f1e6dd;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+    }
+
+    .icon-with-tooltip, .write-icon {
+      position: relative;
+      display: inline-block;
+      font-size: 24px;
+      color: #3e322b;
+      cursor: pointer;
+    }
+
+    .icon-btn {
+      text-decoration: none;
+      color: #3e322b;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .icon-btn:focus {
+      outline: none;
+    }
+
+    .tooltip {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      display: none;
+      white-space: nowrap;
+      z-index: 10;
+    }
+
+    .icon-with-tooltip:hover .tooltip,
+    .write-icon:hover .tooltip {
+      display: block;
+    }
+
+    .date-display {
+      text-align: center;
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 10px;
+      color: #3e322b;
+    }
+
+    .month-pill-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .month-pill {
+      background-color: #e2d4c2;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #3e322b;
+    }
+
+    .month-nav-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: #3e322b;
+      cursor: pointer;
+    }
+
+    .calendar-container {
+      margin: 0 40px;
+      background-color: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      margin-bottom: 8px;
+    }
+
+    .calendar-weekdays div {
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+      font-weight: 500;
+    }
+
+    .calendar-dates {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      grid-auto-rows: 50px;
+      gap: 6px;
+    }
+
+    .calendar-dates div {
+      text-align: center;
+      font-size: 16px;
+      line-height: 50px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .calendar-dates .empty {
+      background-color: transparent;
+      cursor: default;
+    }
+
+    .calendar-dates .today {
+      background-color: #a88f7f;
+      color: white;
+      font-weight: 600;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      margin: 0 auto;
+      line-height: 40px;
+    }
+
+    .calendar-dates div:hover:not(.empty):not(.today):not(.selected) {
+      background-color: rgba(168, 143, 127, 0.3);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      margin: 0 auto;
+    }
+
+    .calendar-dates .selected {
+      background-color: #e2d4c2;
+      color: #3e322b;
+      font-weight: 600;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      margin: 0 auto;
+      line-height: 40px;
+    }
+
+    .preview-box {
+      background-color: #f8f5f1;
+      margin: 30px 40px;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.05);
+      min-height: 120px;
+    }
+
+    .preview-box .preview-date {
+      font-size: 16px;
+      font-weight: 500;
+      color: #3e322b;
+      margin-bottom: 10px;
+    }
+
+    .preview-box .preview-text {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #3e322b;
+      margin-bottom: 10px;
+    }
+
+    .preview-link {
+      color: #a88f7f;
+      text-decoration: underline;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .button-area {
+      text-align: center;
+      margin: 30px 0 50px;
+    }
+
+    .button-area a {
+      display: inline-block;
+      background-color: #a88f7f;
+      color: white;
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      text-decoration: none;
+      margin: 0 10px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .button-area a:hover {
+      background-color: #8c776b;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <div class="header">
+      <div class="icon-with-tooltip">
+        <a href="/community" class="icon-btn">☰</a>
+        <div class="tooltip">커뮤니티</div>
+      </div>
+      <div class="write-icon">
+        <span id="pencilBtn">✏️</span>
+        <div class="tooltip">날짜 선택 후 클릭</div>
+      </div>
+    </div>
+
+    <div class="date-display">{{ current_date }}</div>
+
+    <div class="month-pill-container">
+      <button class="month-nav-btn" id="prevMonthBtn">◀</button>
+      <div class="month-pill" id="monthLabel">{{ month_year }}</div>
+      <button class="month-nav-btn" id="nextMonthBtn">▶</button>
+    </div>
+
+    <div class="calendar-container">
+      <div class="calendar-weekdays">
+        <div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div>
+      </div>
+      <div class="calendar-dates" id="calendarDates"></div>
+    </div>
+
+    <div class="preview-box" id="previewBox">
+      {% if latest_diary %}
+        <div class="preview-date">
+          {{ latest_diary.created_at.strftime('%d %b, %a') | upper }}
+        </div>
+        <div class="preview-text">
+          {{ latest_diary.content[:100] }}...
+        </div>
+        <a href="/diary/{{ latest_diary.id }}" class="preview-link">자세히 보기</a>
+      {% else %}
+        <div class="preview-date">아직 작성된 일기가 없습니다.</div>
+      {% endif %}
+    </div>
+
+    <div class="button-area">
+      <a href="/write_diary">오늘 일기 쓰기</a>
+      <a href="/logout">로그아웃</a>
+    </div>
+  </div>
+
+  <script>
+    const today = new Date();
+    let currentYear = today.getFullYear();
+    let currentMonth = today.getMonth();
+
+    const calendarDatesElem = document.getElementById('calendarDates');
+    const pencilBtn = document.getElementById('pencilBtn');
+    const previewBox = document.getElementById('previewBox');
+    const monthLabel = document.getElementById('monthLabel');
+
+    let selectedDate = null;
+
+    function pad(n) {
+      return n < 10 ? '0' + n : n;
+    }
+
+    function updateMonthLabel(year, month) {
+      const monthNames = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
+      monthLabel.textContent = `${year}년 ${monthNames[month]}`;
+    }
+
+    function renderCalendar(year, month) {
+      calendarDatesElem.innerHTML = '';
+      const firstDay = new Date(year, month, 1).getDay();
+      const lastDate = new Date(year, month + 1, 0).getDate();
+
+      let dayCount = 0;
+      for (let i = 0; i < firstDay; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.classList.add('empty');
+        calendarDatesElem.appendChild(emptyCell);
+        dayCount++;
+      }
+
+      for (let date = 1; date <= lastDate; date++) {
+        const cell = document.createElement('div');
+        cell.textContent = date;
+
+        if (year === today.getFullYear() && month === today.getMonth() && date === today.getDate()) {
+          cell.classList.add('today');
+        }
+
+        cell.addEventListener('click', () => {
+          const prevSelected = document.querySelector('.calendar-dates .selected');
+          if (prevSelected) prevSelected.classList.remove('selected');
+          cell.classList.add('selected');
+
+          const yyyy = year;
+          const mm = pad(month + 1);
+          const dd = pad(date);
+          selectedDate = `${yyyy}-${mm}-${dd}`;
+          console.log("✅ 선택된 날짜:", selectedDate);
+
+          const dateObj = new Date(`${selectedDate}T00:00:00`);
+          const options = { day: 'numeric', month: 'short', weekday: 'short' };
+          const previewDateStr = dateObj.toLocaleDateString('en-US', options).toUpperCase();
+          previewBox.innerHTML = `
+            <div class="preview-date">${previewDateStr}</div>
+            <div class="preview-text">연필 아이콘을 눌러서 일기를 작성하거나 확인하세요.</div>
+          `;
+        });
+
+        calendarDatesElem.appendChild(cell);
+        dayCount++;
+      }
+
+      while (dayCount % 7 !== 0) {
+        const emptyCell = document.createElement('div');
+        emptyCell.classList.add('empty');
+        calendarDatesElem.appendChild(emptyCell);
+        dayCount++;
+      }
+    }
+
+    document.getElementById('prevMonthBtn').addEventListener('click', () => {
+      currentMonth--;
+      if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+      }
+      renderCalendar(currentYear, currentMonth);
+      updateMonthLabel(currentYear, currentMonth);
+    });
+
+    document.getElementById('nextMonthBtn').addEventListener('click', () => {
+      currentMonth++;
+      if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+      }
+      renderCalendar(currentYear, currentMonth);
+      updateMonthLabel(currentYear, currentMonth);
+    });
+
+    renderCalendar(currentYear, currentMonth);
+    updateMonthLabel(currentYear, currentMonth);
+
+    pencilBtn.addEventListener('click', () => {
+      if (!selectedDate) {
+        alert('먼저 달력에서 날짜를 선택해주세요.');
+        return;
+      }
+      console.log("✏ 이동 →", selectedDate);
+      window.location.href = `/write_diary?date=${selectedDate}`;
+    });
+  </script>
+</body>
+</html>

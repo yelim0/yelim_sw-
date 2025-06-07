@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>커뮤니티 관리</title>
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #f3e9df;
+      padding: 40px;
+      color: #333;
+      position: relative;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .back-button {
+      position: absolute;
+      top: 20px;
+      left: 210px;
+      background-color: #f3e9df;
+      color: #333;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 30px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .card {
+      background-color: #fffaf6;
+      border-radius: 12px;
+      padding: 15px 20px;
+      margin: 12px auto;
+      max-width: 900px;
+      box-shadow: 0 0 6px rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .info {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .type-label {
+      font-weight: bold;
+      color: #8e5c4b;
+      margin-bottom: 5px;
+    }
+    .content {
+      margin-bottom: 6px;
+    }
+    .author {
+      font-size: 14px;
+      color: #555;
+    }
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+    .btn {
+      border: none;
+      border-radius: 6px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .delete-btn {
+      background-color: #e57373;
+      color: white;
+    }
+    .ban-btn {
+      background-color: #a1887f;
+      color: white;
+    }
+    .no-reports {
+      text-align: center;
+      font-size: 16px;
+      color: #777;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+<a href="/admin_dashboard" class="back-button">&lt;</a>
+
+<h1>커뮤니티 관리</h1>
+
+{% if reports %}
+  {% for r in reports %}
+    <div class="card">
+      <div class="info">
+        <div class="type-label">[{{ '게시글' if r.report_type == 'post' else '댓글' }}]</div>
+        <div class="content">
+          {{ post_dict[r.target_id].content if r.report_type == 'post' and r.target_id in post_dict else
+             comment_dict[r.target_id].content if r.report_type == 'comment' and r.target_id in comment_dict else '[삭제된 콘텐츠]' }}
+        </div>
+        <div class="author">작성자: {{ user_dict[r.author_id].nickname if r.author_id in user_dict else '알 수 없음' }}</div>
+      </div>
+      <div class="actions">
+        <form method="POST" action="/admin/community/delete/{{ r.report_type }}/{{ r.target_id }}">
+          <button type="submit" class="btn delete-btn">글 삭제</button>
+        </form>
+        <form method="POST" action="/admin/community/ban/{{ r.author_id }}">
+          <button type="submit" class="btn ban-btn">정지</button>
+        </form>
+      </div>
+    </div>
+  {% endfor %}
+{% else %}
+  <div class="no-reports">신고된 글이 없습니다.</div>
+{% endif %}
+
+</body>
+</html>

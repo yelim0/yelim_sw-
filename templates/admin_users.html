@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 - 사용자 신고 관리</title>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f4ebe3;
+            margin: 0;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 285px;
+            background-color: #f4ebe3;
+            color: #3e322b;
+            border: none;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 30px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        h2 {
+            text-align: center;
+            color: #4a3e36;
+            margin-bottom: 30px;
+        }
+
+        .report-container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .report-box {
+            background-color: #fff9f3;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .report-info {
+            color: #3e322b;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .report-info strong {
+            color: #5d3a1a;
+        }
+
+        .report-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .report-actions button {
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .btn-delete {
+            background-color: #e57373;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background-color: #c34444;
+        }
+
+        .btn-suspend {
+            background-color: #a88f7f;
+            color: white;
+        }
+
+        .btn-suspend:hover {
+            background-color: #947d6d;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="/admin_dashboard" class="back-button">&lt;</a>
+
+    <h2>신고된 사용자 관리</h2>
+    <div class="report-container">
+        {% for report in reports %}
+        <div class="report-box">
+            <div class="report-info">
+                {% if report.report_type == 'post' and post_dict.get(report.target_id) %}
+                    <strong>[게시글]</strong> {{ post_dict[report.target_id].content[:60] }}...<br>
+                    작성자: <strong>{{ post_dict[report.target_id].author.nickname }}</strong>
+                {% elif report.report_type == 'comment' and comment_dict.get(report.target_id) %}
+                    <strong>[댓글]</strong> {{ comment_dict[report.target_id].content[:60] }}...<br>
+                    작성자: <strong>{{ comment_dict[report.target_id].user.nickname }}</strong>
+                {% else %}
+                    <em>삭제된 콘텐츠입니다.</em>
+                {% endif %}
+            </div>
+            <div class="report-actions">
+                <form action="/admin/report/delete/{{ report.id }}" method="POST">
+                    <button type="submit" class="btn-delete">기록 삭제</button>
+                </form>
+
+                {% if report.report_type == 'post' and post_dict.get(report.target_id) %}
+                    <form action="/admin/users/toggle/{{ post_dict[report.target_id].author.id }}" method="POST">
+                        <button type="submit" class="btn-suspend">계정 정지</button>
+                    </form>
+                {% elif report.report_type == 'comment' and comment_dict.get(report.target_id) %}
+                    <form action="/admin/users/toggle/{{ comment_dict[report.target_id].user.id }}" method="POST">
+                        <button type="submit" class="btn-suspend">계정 정지</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
