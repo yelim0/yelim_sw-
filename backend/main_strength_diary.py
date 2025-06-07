@@ -11,7 +11,7 @@ class MainStrengthDiary:
         """사이트 초기화 시 호출. 로그인 화면부터 시작."""
         self.is_authenticated = False
         self.current_view = "login"
-        print("✅ 서비스를 시작합니다. 로그인 화면으로 이동합니다.")
+        print("서비스를 시작합니다. 로그인 화면으로 이동합니다.")
 
     def navigate_to(self, view_name: str):
         """사용자 요청에 따라 다른 화면으로 이동"""
@@ -39,10 +39,10 @@ class MainStrengthDiary:
             if self.is_authenticated and isinstance(self.current_user, Admin):
                 self.navigate_to("admin_dashboard")
             else:
-                print("⚠️ 관리자만 접근 가능합니다.")
+                print("관리자만 접근 가능합니다.")
 
         else:
-            print("❌ 알 수 없는 요청입니다.")
+            print("알 수 없는 요청입니다.")
 
     def logout(self):
         """현재 사용자 로그아웃"""
@@ -54,10 +54,10 @@ class MainStrengthDiary:
     def _check_session(self):
         """내부용: 세션 유효성 확인"""
         if not self.is_authenticated:
-            print("⚠️ 로그인 상태가 아닙니다.")
+            print("로그인 상태가 아닙니다.")
             return False
         return True
 
     def _reload_user_data(self):
         """(상속용) 사용자 데이터를 갱신"""
-        print("🔄 사용자 정보를 갱신합니다.")
+        print("사용자 정보를 갱신합니다.")
