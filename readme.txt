@@ -64,7 +64,7 @@ Flask 웹 프레임워크와 transformers 모델을 사용하며 SQLite를 기�
 Trouble Shooting
 -------------------
 실행 중 ModuleNotFoundError 발생 시:
-> 필요한 패키지를 `pip install`로 설치하세요.
+> 필요한 패키지를 pip install로 설치하세요.
 
 웹에서 접속 안 될 경우:
-> 방화벽 또는 백그라운드 실행 여부 확인 후 다시 python main.py
+> 방화벽 또는 백그라운드 실행 여부 확인 후 다시 python main.py 실행
